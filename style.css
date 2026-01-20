@@ -125,11 +125,11 @@ body{
 
 /* Background images */
 .login-bg {
-    background-image: url("lo2.png");
+    background-image: url("https://github.com/jayadeep14/hackton-web/blob/main/lo2.png?raw=true");
 }
 
 .register-bg {
-    background-image: url("lo.png");
+    background-image: url("https://github.com/jayadeep14/hackton-web/blob/main/lo.png?raw=true");
 }
 
 /* Button overlay */

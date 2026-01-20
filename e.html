@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Train Status - IRCTC Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --irctc-blue: #08295a;
+            --accent-blue: #0052cc;
+            --success-green: #16a34a;
+            --error-red: #dc2626;
+            --bg-gray: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: var(--white);
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 22px;
+            color: var(--irctc-blue);
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-text h1 { font-size: 18px; color: var(--irctc-blue); }
+        .header-text p { font-size: 12px; color: var(--text-muted); }
+
+        .container {
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 0 16px;
+        }
+
+        /* Input Section */
+        .search-card {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr auto;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .field group { display: flex; flex-direction: column; }
+        
+        label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            width: 100%;
+        }
+
+        .btn-track {
+            background: var(--irctc-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            height: 48px;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 6px solid var(--error-red); /* Dynamic color based on status */
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .train-title h2 { font-size: 20px; margin-bottom: 4px; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            background: #fee2e2;
+            color: var(--error-red);
+        }
+
+        .delay-large {
+            text-align: right;
+        }
+        .delay-large span {
+            display: block;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--error-red);
+            line-height: 1;
+        }
+
+        /* Timeline Section */
+        .timeline-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px 24px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 80px 40px 1fr;
+            gap: 10px;
+            min-height: 100px;
+            position: relative;
+        }
+
+        /* The vertical line */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 99px;
+            top: 30px;
+            bottom: -30px;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item:last-child::before { display: none; }
+
+        .time-col {
+            text-align: right;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .time-col span {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .marker-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px var(--border);
+            margin-top: 6px;
+        }
+
+        .dot.active {
+            background: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(0, 82, 204, 0.2);
+            width: 16px;
+            height: 16px;
+        }
+
+        .info-col h4 { font-size: 16px; color: var(--text-dark); }
+        .info-col p { font-size: 13px; color: var(--text-muted); }
+
+        .platform-tag {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 2px 8px;
+            background: #f1f5f9;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .current-tag {
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .delay-text { color: var(--error-red); font-size: 12px; font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .input-grid { grid-template-columns: 1fr; }
+            .summary-card { flex-direction: column; text-align: center; gap: 15px; }
+            .delay-large { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">IRCTC</a>
+        <div class="header-text">
+            <h1>Track Your Train</h1>
+            <p>Live running status & delays</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="search-card">
+            <div class="input-grid">
+                <div class="field-group">
+                    <label>Train Number / Name</label>
+                    <input type="text" placeholder="e.g. 12424 or Rajdhani" value="12424 - RAJDHANI EXP">
+                </div>
+                <div class="field-group">
+                    <label>Journey Date</label>
+                    <select>
+                        <option>Today, 20 Jan</option>
+                        <option>Yesterday, 19 Jan</option>
+                    </select>
+                </div>
+                <button class="btn-track">Back</button>
+                <button class="btn-track" onclick="goToHome()">Paynow</button>
+            </div>
+        </section>
+
+        <section class="summary-card">
+            <div class="train-title">
+                <span class="status-badge">Delayed</span>
+                <h2 id="display-train-name">12424 - New Delhi Rajdhani</h2>
+                <p style="font-size: 14px; color: var(--text-muted);">Current: <b>Kanpur Central (CNB)</b></p>
+            </div>
+            <div class="delay-large">
+                <p style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Total Delay</p>
+                <span>45m</span>
+                <p style="font-size: 12px; color: var(--text-muted);">Updated: 2 mins ago</p>
+            </div>
+        </section>
+
+        <section class="timeline-card">
+            
+            <div class="timeline-item">
+                <div class="time-col">
+                    16:30
+                    <span>Scheduled</span>
+                </div>
+                <div class="marker-col">
+                    <div class="dot" style="background: var(--success-green); box-shadow: none;"></div>
+                </div>
+                <div class="info-col">
+                    <h4>New Delhi (NDLS)</h4>
+                    <p>Departed On Time</p>
+                    <span class="platform-tag">PF 16</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="time-col">
+                    22:15
+                    <span class="delay-text">+45 min delay</span>
+                </div>
+                <div class="marker-col">
+                    <div class="dot active"></div>
+                </div>
+                <div class="info-col">
+                    <span class="current-tag">● Live Now</span>
+                    <h4>Kanpur Central (CNB)</h4>
+                    <p>Expected Departure: 22:25</p>
+                    <span class="platform-tag">PF 01</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="time-col" style="color: var(--text-muted);">
+                    02:45
+                    <span>Estimated</span>
+                </div>
+                <div class="marker-col">
+                    <div class="dot"></div>
+                </div>
+                <div class="info-col">
+                    <h4 style="color: var(--text-muted);">Prayagraj Jn (PRYJ)</h4>
+                    <p>Distance left: 194 km</p>
+                    <span class="platform-tag">PF --</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="time-col" style="color: var(--text-muted);">
+                    06:10
+                    <span>Estimated</span>
+                </div>
+                <div class="marker-col">
+                    <div class="dot"></div>
+                </div>
+                <div class="info-col">
+                    <h4 style="color: var(--text-muted);">Patna Jn (PNBE)</h4>
+                    <p>Expected Arrival: 06:55</p>
+                </div>
+            </div>
+
+        </section>
+
+        <p style="text-align: center; margin-top: 24px; font-size: 12px; color: var(--text-muted);">
+            Estimated times are based on the current running speed of the train.
+        </p>
+    </div>
+<script>
+    window.addEventListener("message", (event) => {
+        if (event.data.type === "UPDATE_TRAIN_NAME") {
+            const newName = event.data.trainName;
+
+            // 1. Update the Search Input field
+            const searchInput = document.querySelector('.search-card input');
+            if (searchInput) searchInput.value = newName;
+
+            // 2. Update the Summary Card Heading (h2)
+            const summaryHeading = document.querySelector('.summary-card h2');
+            if (summaryHeading) summaryHeading.innerText = newName;
+            
+            // 3. Update the Page Title (Browser Tab)
+            document.title = newName + " - Live Status";
+        }
+    }, false);
+
+    // Your existing searchPressed function
+    function searchPressed() {
+        const trainVal = document.querySelector('.search-card input').value;
+        window.parent.postMessage({
+            type: "SEARCH_CLICKED",
+            train: trainVal
+        }, "*");
+    }
+    function goToHome() {
+    //parent.goHome();
+    window.parent.postMessage("pay", "*");
+  }
+</script>
+</body>
+</html>

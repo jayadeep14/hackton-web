@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRCTC Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #08295a;
+            --accent-blue: #0052cc;
+            --bg-light: #f4f7fa;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --status-green: #16a34a;
+            --status-orange: #ea580c;
+            --status-red: #dc2626;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Area */
+        .header {
+            background: var(--white);
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .topnav { overflow: hidden; background-color: white; display: flex; align-items: center; }
+        .topnav a, .topnav b {
+            color: var(--text-dark);
+            text-align: center;
+            padding: 16px 20px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .topnav a:hover { color: var(--accent-blue); }
+        .topnav a.active { color: var(--accent-blue); font-weight: 700; }
+
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 15px; }
+
+        /* Hero Flex Layout */
+        .hero-section { display: flex; gap: 30px; align-items: stretch; margin-bottom: 2.5rem; }
+
+        .slideshow-container {
+            flex: 1.2;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: #000;
+            height: 450px;
+        }
+
+        .mySlides { display: none; height: 100%; }
+        .mySlides img { width: 100%; height: 100%; object-fit: cover; }
+
+        .search-card {
+            flex: 1;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: none; /* Hidden by default until "Find Train" clicked */
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .search-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 10px; align-items: end; margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-light); margin-bottom: 4px; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+        
+        .btn-search {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-search:hover { background: var(--accent-blue); }
+
+        /* Full Window Content Iframe */
+        #contentFrame {
+            display: none;
+            width: 100%;
+            height: calc(100vh - 80px); /* Adjust based on header height */
+            border: none;
+        }
+
+        @media (max-width: 992px) {
+            .hero-section { flex-direction: column; }
+            .slideshow-container { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="index.html" class="logo">IRCTC</a>
+    <div class="topnav">
+        <a class="active" onclick="goHome()">Home</a>
+        <a href="#news">News</a>
+        <a id="findTrainNav" onclick="showSearchCard()">Find Train</a>
+        <a href="#about">About</a>
+        <b onclick="loadNewPage('index.html')">Login / Sign Up</b>
+    </div>
+</header>
+
+<div id="main-content" class="container">
+    <div class="hero-section">
+        <div class="slideshow-container" id="slider">
+            <div class="mySlides fade"><img src="lo.png" alt="1"></div>
+            <div class="mySlides fade"><img src="lo1.png" alt="2"></div>
+            <div class="mySlides fade"><img src="lo2.png" alt="3"></div>
+        </div>
+
+        <section class="search-card" id="searchSection">
+            <div class="search-grid">
+                <div class="input-group"><label>From</label><input type="text" value="New Delhi (NDLS)"></div>
+                <div style="text-align: center; color: var(--accent-blue); font-size: 20px;">⇌</div>
+                <div class="input-group"><label>To</label><input type="text" placeholder="Destination"></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <div class="input-group"><label>Date</label><input type="date" value="2026-01-26"></div>
+                <div class="input-group"><label>Class</label><select><option>All Classes</option></select></div>
+            </div>
+            <button class="btn-search" onclick="loadNewPage('c.html')">Search Trains</button>
+        </section>
+    </div>
+</div>
+
+<iframe id="contentFrame"></iframe>
+
+<script>
+    let slideIndex = 0;
+    
+    const searchSection = document.getElementById("searchSection");
+    const mainContent = document.getElementById("main-content");
+    const contentFrame = document.getElementById("contentFrame");
+
+    showSlides();
+
+    function showSlides() {
+        let slides = document.getElementsByClassName("mySlides");
+        for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}    
+        if(slides[slideIndex-1]) slides[slideIndex-1].style.display = "block";  
+        setTimeout(showSlides, 3000);
+    }
+
+    // Toggle the Search Card on the right
+    function showSearchCard() {
+        searchSection.style.display = "flex";
+    }
+
+    // Load c.html inside the current window, below the topnav
+    function loadNewPage(url) {
+        // Hide the current landing page content
+        mainContent.style.display = "none";
+        
+        // Show the iframe and set its source to c.html
+        contentFrame.style.display = "block";
+        contentFrame.src = url;
+    }
+    function goHome() {
+    contentFrame.style.display = "none"; // Hide the iframe
+    contentFrame.src = "";              // Clear the iframe source
+    mainContent.style.display = "block"; // Show the original landing content
+    searchSection.style.display = "none"; // Hide the search card again (optional)
+}
+// Listen for messages from the iframe
+window.addEventListener("message", (event) => {
+    // Safety check: ensure the message is what we expect
+    if (event.data === "LOGIN_SUCCESS") {
+        
+        // 1. Hide the iframe
+        const contentFrame = document.getElementById("contentFrame");
+        contentFrame.style.display = "none";
+        
+        // 2. Show the main landing page content again
+        const mainContent = document.getElementById("main-content");
+        mainContent.style.display = "block";
+        
+        // 3. Update the TopNav text to show login success
+        const loginBtn = document.querySelector(".topnav b");
+        if (loginBtn) {
+            loginBtn.innerHTML = '<i class="fa fa-user"></i> Welcome, User';
+            loginBtn.style.color = "var(--status-green)";
+        }
+        
+        //alert("Login Successful!");
+    }
+    if (event.data === "S1") {
+        
+        // 1. Hide the iframe
+        const contentFrame = document.getElementById("contentFrame");
+        contentFrame.style.display = "none";
+        
+        // 2. Show the main landing page content again
+        const mainContent = document.getElementById("main-content");
+        mainContent.style.display = "block";
+        goHome();
+        mainContent.style.display = "none";
+        
+        // Show the iframe and set its source to c.html
+        contentFrame.style.display = "block";
+        loadNewPage("e.html","NDLS MMCT SPL");
+        
+        
+        //alert("Login Successful!");
+    }
+    if (event.data === "S2") {
+        
+        // 1. Hide the iframe
+        const contentFrame = document.getElementById("contentFrame");
+        contentFrame.style.display = "none";
+        
+        // 2. Show the main landing page content again
+        const mainContent = document.getElementById("main-content");
+        mainContent.style.display = "block";
+        goHome();
+        mainContent.style.display = "none";
+        
+        // Show the iframe and set its source to c.html
+        contentFrame.style.display = "block";
+        loadNewPage("e.html","RAJDHANI EXP");
+        
+        
+        //alert("Login Successful!");
+    }
+    if (event.data === "pay") {
+    goHome();
+    loadNewPage('i.html')
+    }
+    if (event.data === "payme") {
+    goHome();
+    loadNewPage('D.html')
+    }
+    
+}, false);
+    function closeIframeAndShowHome() {
+    document.getElementById("contentFrame").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+}
+function loadNewPage(url, trainData) {
+    const mainContent = document.getElementById("main-content");
+    const contentFrame = document.getElementById("contentFrame");
+
+    mainContent.style.display = "none";
+    contentFrame.style.display = "block";
+    contentFrame.src = url;
+
+    // Wait for a.html to load, then send the train name
+    contentFrame.onload = function() {
+        contentFrame.contentWindow.postMessage({
+            type: "UPDATE_TRAIN_NAME",
+            trainName: trainData // You can get this from an input field
+        }, "*");
+    };
+}
+window.addEventListener("message", (event) => {
+    if (event.data.type === "PASSENGER_LIST_SUBMITTED") {
+        const list = event.data.data;
+        console.log("Received Passenger List:", list);
+
+        // Hide the iframe and show home again
+        document.getElementById("contentFrame").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+
+        // Example: Show a summary alert
+        goHome();
+        
+        showFinalTicket(list);
+        //loadNewPage('f.html')
+        alert(`Success! Booked tickets for ${list.length} passengers. Primary Passenger: ${list[0].name} ${list[1].age}`);
+    }
+}, false);
+// Function in index.html to show final ticket
+function showFinalTicket(passengerData) {
+    const contentFrame = document.getElementById("contentFrame");
+    
+    // 1. Change iframe to the ticket page
+    contentFrame.src = "f.html"; 
+    loadNewPage('f.html')
+
+    // 2. Wait for ticket page to load, then send the data
+    contentFrame.onload = function() {
+        contentFrame.contentWindow.postMessage({
+            type: "PASSENGER_LIST_SUBMITTED",
+            data: passengerData
+        }, "*");
+    };
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Trains - IRCTC Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #08295a;
+            --accent-blue: #0052cc;
+            --bg-light: #f4f7fa;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --status-green: #16a34a;
+            --status-orange: #ea580c;
+            --status-red: #dc2626;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        /* Header Area */
+        .header {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header-title {
+            border-left: 2px solid var(--border);
+            padding-left: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 20px;
+            color: var(--primary-blue);
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* Search Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .search-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr 40px 1fr;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: #fcfcfc;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .swap-icon {
+            text-align: center;
+            padding-top: 20px;
+            cursor: pointer;
+            color: var(--accent-blue);
+            font-size: 20px;
+        }
+
+        .secondary-search-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .btn-search {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-search:hover {
+            background: #0d3b82;
+        }
+
+        /* Results Section */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .train-card {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .train-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .train-main-info {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .train-identity h3 {
+            font-size: 18px;
+            color: var(--primary-blue);
+        }
+
+        .train-identity p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .time-block h4 {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .time-block p {
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .duration-line {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            position: relative;
+        }
+
+        .duration-line::after {
+            content: '';
+            display: block;
+            height: 1px;
+            background: var(--border);
+            margin: 4px auto;
+            width: 60px;
+        }
+
+        /* Availability Slots */
+        .availability-row {
+            padding: 15px 20px;
+            display: flex;
+            gap: 12px;
+            background: #f8fafc;
+            overflow-x: auto;
+        }
+
+        .class-slot {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 8px;
+            min-width: 130px;
+            cursor: pointer;
+        }
+
+        .class-slot.selected {
+            border-color: var(--accent-blue);
+            background: #f0f7ff;
+        }
+
+        .class-name {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .status {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .status.available { color: var(--status-green); }
+        .status.rac { color: var(--status-orange); }
+        .status.wl { color: var(--status-red); }
+
+        .price {
+            font-size: 12px;
+            display: block;
+            margin-top: 4px;
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 768px) {
+            .search-grid, .secondary-search-grid, .train-main-info {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .swap-icon { transform: rotate(90deg); padding: 0; height: 20px; }
+            .train-main-info { text-align: center; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="#" class="logo">IRCTC</a>
+        <div class="header-title">
+            <h1>Find Trains</h1>
+            <p>Search trains and check seat availability</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="search-card">
+            <div class="search-grid">
+                <div class="input-group">
+                    <label>From Station</label>
+                    <input type="text" placeholder="e.g. New Delhi (NDLS)" value="New Delhi (NDLS)">
+                </div>
+                <div class="swap-icon">⇌</div>
+                <div class="input-group">
+                    <label>To Station</label>
+                    <input type="text" placeholder="e.g. Mumbai Central (MMCT)">
+                </div>
+            </div>
+
+            <div class="secondary-search-grid">
+                <div class="input-group">
+                    <label>Journey Date</label>
+                    <input type="date" value="2026-01-26">
+                </div>
+                <div class="input-group">
+                    <label>Class</label>
+                    <select>
+                        <option>All Classes</option>
+                        <option>Sleeper (SL)</option>
+                        <option>AC 3 Tier (3A)</option>
+                        <option>AC 2 Tier (2A)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Quota</label>
+                    <select>
+                        <option>General</option>
+                        <option>Ladies</option>
+                        <option>Tatkal</option>
+                        <option>Lower Berth/Sr. Citizen</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-search">Search Trains</button>
+        </section>
+
+        <div class="results-header">
+            <h3>4 Trains found for 26 Jan</h3>
+            <span style="font-size: 14px; color: var(--text-light);">Sorted by: Departure</span>
+        </div>
+
+        <div class="train-card">
+            <div class="train-main-info" onclick="goToHome('S1')">
+                <div class="train-identity">
+                    <h3>NDLS MMCT SPL</h3>
+                    <p>Train #02184 | Runs: M T W T F S S</p>
+                </div>
+                <div class="time-block">
+                    <h4>16:30</h4>
+                    <p>NDLS</p>
+                </div>
+                <div class="duration-line">
+                    15h 45m
+                </div>
+                <div class="time-block" style="text-align: right;">
+                    <h4>08:15</h4>
+                    <p>MMCT</p>
+                </div>
+            </div>
+            <div class="availability-row">
+                <div class="class-slot">
+                    <div class="class-name">SLEEPER</div>
+                    <div class="status wl">WL 24</div>
+                    <span class="price">₹640</span>
+                </div>
+                <div class="class-slot selected">
+                    <div class="class-name">AC 3 TIER</div>
+                    <div class="status available">AVL 142</div>
+                    <span class="price">₹1,750</span>
+                </div>
+                <div class="class-slot">
+                    <div class="class-name">AC 2 TIER</div>
+                    <div class="status available">AVL 12</div>
+                    <span class="price">₹2,400</span>
+                </div>
+                <div class="class-slot">
+                    <div class="class-name">AC 1 TIER</div>
+                    <div class="status rac">RAC 02</div>
+                    <span class="price">₹4,100</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="train-card">
+            <div class="train-main-info" onclick="goToHome('S2')">
+                <div class="train-identity">
+                    <h3>RAJDHANI EXP</h3>
+                    <p>Train #12432 | Runs: Daily</p>
+                </div>
+                <div class="time-block">
+                    <h4>20:00</h4>
+                    <p>NDLS</p>
+                </div>
+                <div class="duration-line">
+                    14h 20m
+                </div>
+                <div class="time-block" style="text-align: right;">
+                    <h4>10:20</h4>
+                    <p>MMCT</p>
+                </div>
+            </div>
+            <div class="availability-row">
+                <div class="class-slot">
+                    <div class="class-name">AC 3 TIER</div>
+                    <div class="status available">AVL 45</div>
+                    <span class="price">₹2,100</span>
+                </div>
+                <div class="class-slot">
+                    <div class="class-name">AC 2 TIER</div>
+                    <div class="status wl">WL 04</div>
+                    <span class="price">₹3,200</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<script>
+function goToHome(no) {
+    //parent.goHome();
+    window.parent.postMessage(no, "*");
+  }
+</script>
+</body>
+</html>

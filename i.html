@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passenger Management - IRCTC Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #08295a;
+            --accent-blue: #0052cc;
+            --bg-light: #f4f7fa;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-add {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .passenger-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+            border-left: 5px solid var(--accent-blue);
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+        label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+
+        input {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: #fdfdfd;
+        }
+
+        input:disabled {
+            background: #f1f5f9;
+            border: 1px solid transparent;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .actions { display: flex; gap: 8px; }
+        .btn-edit, .btn-delete, .btn-save {
+            border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;
+        }
+
+        .btn-edit { background: #e0e7ff; color: var(--accent-blue); }
+        .btn-save { background: var(--success); color: white; display: none; }
+        .btn-delete { background: #fee2e2; color: var(--danger); }
+
+        /* Submit Section */
+        .submit-area {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed var(--border);
+            text-align: right;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
+        }
+
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-flex">
+        <h2>Passenger Details</h2>
+        <button class="btn-add" onclick="addPassenger()">+ Add Passenger</button>
+    </div>
+
+    <div id="passenger-list">
+        <div class="passenger-card" id="p1">
+            <div class="input-group">
+                <label>Passenger Name</label>
+                <input type="text" value="John Doe" disabled class="p-name">
+            </div>
+            <div class="input-group">
+                <label>Age</label>
+                <input type="number" value="28" disabled class="p-age">
+            </div>
+            <div class="input-group">
+                <label>Coach</label>
+                <input type="text" value="B1" disabled class="p-coach">
+            </div>
+            <div class="input-group">
+                <label>Berth</label>
+                <input type="text" value="24 (Upper)" disabled class="p-berth">
+            </div>
+            <div class="actions">
+                <button class="btn-edit" onclick="toggleEdit('p1')">Edit</button>
+                <button class="btn-save" onclick="toggleEdit('p1')">Save</button>
+                <button class="btn-delete" onclick="removePassenger('p1')">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="submit-area">
+        <button class="btn-submit" onclick="sendDataToHome()">Confirm & Book Tickets</button>
+    </div>
+</div>
+
+<script>
+    let passengerCount = 1;
+
+    function addPassenger() {
+        passengerCount++;
+        const id = 'p' + passengerCount;
+        const mockBerth = Math.floor(Math.random() * 64) + 1 + " (Lower)";
+
+        const template = `
+            <div class="passenger-card" id="${id}">
+                <div class="input-group">
+                    <label>Passenger Name</label>
+                    <input type="text" placeholder="Enter Name" class="p-name">
+                </div>
+                <div class="input-group">
+                    <label>Age</label>
+                    <input type="number" placeholder="0" class="p-age">
+                </div>
+                <div class="input-group">
+                    <label>Coach</label>
+                    <input type="text" value="B1" disabled class="p-coach">
+                </div>
+                <div class="input-group">
+                    <label>Berth</label>
+                    <input type="text" value="${mockBerth}" disabled class="p-berth">
+                </div>
+                <div class="actions">
+                    <button class="btn-edit" style="display:none" onclick="toggleEdit('${id}')">Edit</button>
+                    <button class="btn-save" style="display:inline-block" onclick="toggleEdit('${id}')">Save</button>
+                    <button class="btn-delete" onclick="removePassenger('${id}')">Remove</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('passenger-list').insertAdjacentHTML('beforeend', template);
+    }
+
+    function removePassenger(id) {
+        if (document.querySelectorAll('.passenger-card').length > 1) {
+            document.getElementById(id).remove();
+        } else {
+            alert("At least one passenger is required.");
+        }
+    }
+    
+
+    function toggleEdit(id) {
+        const card = document.getElementById(id);
+        const nameInput = card.querySelector('.p-name');
+        const ageInput = card.querySelector('.p-age');
+        const editBtn = card.querySelector('.btn-edit');
+        const saveBtn = card.querySelector('.btn-save');
+
+        if (nameInput.disabled) {
+            nameInput.disabled = false;
+            ageInput.disabled = false;
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+        } else {
+            nameInput.disabled = true;
+            ageInput.disabled = true;
+            editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+        }
+    }
+
+    // NEW FUNCTION: Sends list to index.html
+    function sendDataToHome() {
+        const passengers = [];
+        const cards = document.querySelectorAll('.passenger-card');
+
+        cards.forEach(card => {
+            passengers.push({
+                name: card.querySelector('.p-name').value,
+                age: card.querySelector('.p-age').value,
+                coach: card.querySelector('.p-coach').value,
+                berth: card.querySelector('.p-berth').value
+            });
+        });
+
+        // Send message to parent window
+        window.parent.postMessage({
+            type: "PASSENGER_LIST_SUBMITTED",
+            data: passengers
+        }, "*");
+        
+        alert("Passenger list sent to home page!");
+    }
+</script>
+
+</body>
+</html>

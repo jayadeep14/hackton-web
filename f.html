@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Ticket - IRCTC Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --irctc-blue: #08295a;
+            --accent-blue: #0052cc;
+            --success-green: #16a34a;
+            --bg-light: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .logo { font-weight: 800; font-size: 24px; color: var(--irctc-blue); }
+
+        .ticket-status-bar {
+            background: var(--white);
+            padding: 16px 24px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .pnr-badge {
+            background: #f0f7ff;
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .status-confirmed {
+            color: var(--success-green);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ticket-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .ticket-header {
+            background: var(--irctc-blue);
+            color: white;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-body { padding: 32px; }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .station h2 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+        .station p { color: var(--text-muted); font-size: 14px; }
+        .time { font-size: 18px; font-weight: 600; color: var(--irctc-blue); }
+        .journey-arrow { color: var(--text-muted); font-size: 24px; }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .passenger-list { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+        .passenger-list th { text-align: left; font-size: 12px; color: var(--text-muted); padding: 8px 0; }
+        .passenger-list td { padding: 12px 0; font-size: 15px; font-weight: 500; border-bottom: 1px solid #f8fafc; }
+
+        .action-area { text-align: center; padding: 0 32px 32px; }
+        .btn-primary {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: var(--irctc-blue); color: white; text-decoration: none;
+            padding: 18px; border-radius: 12px; font-weight: 700; font-size: 18px;
+            margin-bottom: 16px; cursor: pointer; border: none;
+        }
+
+        .secondary-actions { display: flex; justify-content: center; gap: 30px; }
+        .btn-subtle { color: var(--accent-blue); text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+        .instructions { background: #fffbeb; border: 1px solid #fef3c7; padding: 16px; border-radius: 8px; font-size: 13px; color: #92400e; }
+
+        /* Iframe styling */
+        #contentFrame {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+
+        @media print {
+            .btn-primary, .secondary-actions, .instructions { display: none; }
+            body { background: white; padding: 0; }
+            .ticket-card { box-shadow: none; border: 1px solid #eee; }
+        }
+    </style>
+</head>
+<body>
+
+<iframe id="contentFrame"></iframe>
+
+<div class="container" id="main-content">
+    <header>
+        <div class="logo">IRCTC</div>
+        <div style="text-align: right;">
+            <p style="font-size: 12px; color: var(--text-muted);">Booking Date</p>
+            <p id="current-date" style="font-weight: 600;">20 Jan 2026</p>
+        </div>
+    </header>
+
+    <div class="ticket-status-bar">
+        <div>
+            <p style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">PNR Number</p>
+            <div class="pnr-badge">425-9830214</div>
+        </div>
+        <div class="status-confirmed">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+            Confirmed
+        </div>
+    </div>
+
+    <main class="ticket-card">
+        <div class="ticket-header">
+            <div>
+                <h3 style="font-size: 18px;">Rajdhani Express</h3>
+                <p style="font-size: 13px; opacity: 0.9;">Train #12424 | AC 3 Tier (3A)</p>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 13px; opacity: 0.9;">Quota</p>
+                <h3 style="font-size: 18px;">General</h3>
+            </div>
+        </div>
+
+        <div class="ticket-body">
+            <div class="journey-grid">
+                <div class="station">
+                    <p class="time">16:30</p>
+                    <h2>NDLS</h2>
+                    <p>New Delhi</p>
+                </div>
+                <div class="journey-arrow">→</div>
+                <div class="station">
+                    <p class="time">06:10</p>
+                    <h2>PNBE</h2>
+                    <p>Patna Junction</p>
+                </div>
+            </div>
+
+            <div class="section-title">Passenger Details</div>
+            <table class="passenger-list">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Coach</th>
+                        <th>Berth</th>
+                    </tr>
+                </thead>
+                <tbody id="ticket-passenger-body">
+                    <tr><td colspan="4" style="text-align:center; color:gray;">Waiting for booking data...</td></tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">Payment Summary</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <p style="color: var(--text-muted);">Total Amount Paid (Inclusive of Taxes)</p>
+                <p id="total-price" style="font-size: 20px; font-weight: 800; color: var(--irctc-blue);">₹0.00</p>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <button class="btn-primary" onclick="my()">
+                Print Ticket
+            </button>
+            <div class="secondary-actions">
+                <a href="#" class="btn-subtle" onclick="location.reload()">Refresh</a>
+                <a href="#" class="btn-subtle">Share SMS</a>
+            </div>
+        </div>
+    </main>
+
+    <div class="instructions">
+        <strong>Important:</strong> Please carry a valid original Identity Proof.
+    </div>
+</div>
+
+<script>
+    // Global variable to store the list when it arrives
+    let currentPassengerData = [];
+
+    window.addEventListener("message", (event) => {
+        if (event.data.type === "PASSENGER_LIST_SUBMITTED") {
+            currentPassengerData = event.data.data; // Save data globally
+            const tableBody = document.getElementById("ticket-passenger-body");
+            const priceDisplay = document.getElementById("total-price");
+            
+            tableBody.innerHTML = "";
+
+            currentPassengerData.forEach(p => {
+                const row = `
+                    <tr>
+                        <td>${p.name}</td>
+                        <td>${p.age} Yrs</td>
+                        <td>${p.coach}</td>
+                        <td>${p.berth}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+
+            const total = currentPassengerData.length * 1225;
+            priceDisplay.innerText = "₹" + total.toLocaleString('en-IN') + ".00";
+        }
+        if (event.data.type === "PA") {
+            //const contentFrame = ;
+            document.getElementById("main-content").style.display = "block";
+            document.getElementById("contentFrame").style.display = "none";
+            
+        }
+    }, false);
+
+    function myy(){
+        const contentFrame = document.getElementById("contentFrame");
+        contentFrame.style.display = "block";
+        contentFrame.src = "D.html"; // Ensure D.html is in the same folder
+        
+    }
+
+    function my(){
+        document.getElementById("main-content").style.display = "none";
+        myy();
+    }
+</script>
+
+</body>
+</html>

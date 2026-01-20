@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - IRCTC NextGen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --irctc-blue: #08295a;
+            --success-green: #22c55e;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --bg-gray: #f3f4f6;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding: 0 10px;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            color: var(--irctc-blue);
+            letter-spacing: -1px;
+        }
+
+        /* Main Card */
+        .confirmation-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 32px;
+            text-align: center;
+        }
+
+        /* Status Section */
+        .status-icon {
+            width: 64px;
+            height: 64px;
+            background-color: #dcfce7;
+            color: var(--success-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .subtext {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .transaction-badge {
+            display: inline-block;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--irctc-blue);
+            margin-bottom: 32px;
+        }
+
+        /* Summary Section */
+        .summary-box {
+            text-align: left;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .train-info {
+            border-bottom: 1px dashed #e5e7eb;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .train-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--irctc-blue);
+        }
+
+        .route-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+        }
+
+        .station h3 { font-size: 18px; margin: 0; }
+        .station p { font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+
+        .arrow { color: var(--text-muted); font-size: 20px; }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .value { font-size: 15px; font-weight: 600; }
+
+        /* Actions */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            background-color: var(--irctc-blue);
+            color: white;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover { opacity: 0.9; }
+
+        .secondary-actions {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .btn-text {
+            color: var(--irctc-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .security-tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .confirmation-card { padding: 20px; }
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo">IRCTC</div>
+        <div style="font-size: 12px; color: var(--text-muted); text-align: right;">
+            24 Jan 2024<br>14:32 PM
+        </div>
+    </header>
+
+    <main class="confirmation-card">
+        <div class="status-icon">✔</div>
+        <h1>Payment Successful</h1>
+        <p class="subtext">Your ticket has been booked successfully</p>
+        
+        <div class="transaction-badge">
+            TXN ID: 100000459283741
+        </div>
+
+        <div class="summary-box">
+            <div class="train-info">
+                <p class="label">Train Details</p>
+                <div class="train-name">12424 - RAJDHANI EXPRESS</div>
+                
+                <div class="route-flex">
+                    <div class="station">
+                        <h3>NDLS</h3>
+                        <p>New Delhi</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="station" style="text-align: right;">
+                        <h3>CNB</h3>
+                        <p>Kanpur Central</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-grid">
+                <div>
+                    <p class="label">Journey Date</p>
+                    <p class="value">Friday, 26 Jan 2024</p>
+                </div>
+                <div>
+                    <p class="label">Class & Quota</p>
+                    <p class="value">3AC | General</p>
+                </div>
+                <div>
+                    <p class="label">Passengers</p>
+                    <p class="value">02 Adults</p>
+                </div>
+                <div>
+                    <p class="label">Total Paid</p>
+                    <p class="value" style="color: var(--irctc-blue); font-size: 18px;">₹2,450.00</p>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" class="btn-primary" onclick="ok()">Download Ticket (PDF)</a>
+
+        <div class="secondary-actions">
+            <a href="#" class="btn-text">Print Ticket</a>
+            <a href="#" class="btn-text">View Booking History</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Need help? <a href="#" style="color: var(--irctc-blue);">Contact Support</a></p>
+        <div class="security-tag">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+            </svg>
+            Secure payment processed via IRCTC
+        </div>
+    </footer>
+</div>
+<script>
+        function ok(){
+        window.parent.postMessage("PA", "*");
+        }
+</script>
+</body>
+</html>

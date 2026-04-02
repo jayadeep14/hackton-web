@@ -107,10 +107,18 @@ body {
     <div class="mySlides"><img src="https://github.com/jayadeep14/hackton-web/blob/main/lo3.png?raw=true"></div>
 </div>
 
+
 <section class="search-card" id="searchSection">
-    <input type="text" placeholder="From"><br><br>
-    <input type="text" placeholder="To"><br><br>
-    <button onclick="loadNewPage('c.html')">Search Trains</button>
+    <div class="search-grid">
+        <div class="input-group"><label>From</label><input type="text" value="New Delhi (NDLS)"></div>
+        <div style="text-align: center; color: var(--accent-blue); font-size: 20px;">⇌</div>
+        <div class="input-group"><label>To</label><input type="text" placeholder="Destination"></div>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+        <div class="input-group"><label>Date</label><input type="date" value="2026-01-26"></div>
+        <div class="input-group"><label>Class</label><select><option>All Classes</option></select></div>
+    </div>
+    <button class="btn-search" onclick="loadNewPage('c.html')">Search Trains</button>
 </section>
 
 </div>
